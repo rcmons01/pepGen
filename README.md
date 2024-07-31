@@ -8,26 +8,26 @@ pepGen is a python script for generating n-mer peptoid libraries of any composit
 --------------------------------------------------------------
 Commands for installing dependencies with Conda: 
 
-conda create -n peptoid_env python=3.9
-conda activate peptoid_env
+`conda create -n peptoid_env python=3.9`
+`conda activate peptoid_env`
 
-conda install -c conda-forge rdkit
+`conda install -c conda-forge rdkit`
 
-conda install -c conda-forge openbabel
+`conda install -c conda-forge openbabel`
 
-pip install stk
+`pip install stk`
 
 ---------------------------------------------------------------
 Commands for installing with PIP:
 
-python -m venv peptoid_env
-source peptoid_env/bin/activate  # On Windows, use `peptoid_env\Scripts\activate`
+`python -m venv peptoid_env`
+`source peptoid_env/bin/activate`  # On Windows, use `peptoid_env\Scripts\activate`
 
-pip install rdkit-pypi
+`pip install rdkit-pypi`
 
-pip install openbabel
+`pip install openbabel`
 
-pip install stk
+`pip install stk`
 
 
 ----------------------------------------------------------------
