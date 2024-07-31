@@ -1,6 +1,7 @@
 # pepGen
 A stand-alone script for generation of combinatorial peptoid (NOT PEPTIDE) libraries for virtual screening.
-![image](https://github.com/user-attachments/assets/0164a960-b94c-4e54-af79-b3e432535ad0)
+
+![image](https://github.com/user-attachments/assets/13a0e08e-42ae-41b4-8219-85848f787ac1)
 
 
 pepGen is a python script for generating n-mer peptoid libraries of any composition. [Genscript](https://www.genscript.com/peptoid_synthesis.html) currently has 20 peptoid monomers listed and available for synthesis and so the current library ([genscript_SMILES.txt](https://github.com/rcmons01/pepGen/blob/main/genscript_SMILES.txt)) reflects these residues. However, this list can be expanded or trimmed down as needed. The requirements for creating and incorporating new residues is that there is a Bromine (Br) group attached at the terminal nitrogen (N) group and that there is an amide group at the opposite end. This script can generate either all combinations of an n-mer or a single defined peptoid molecule. It can generate as SDF or MOL2. 
