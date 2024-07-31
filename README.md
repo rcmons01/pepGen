@@ -34,9 +34,10 @@ Commands for installing with PIP:
 The program will either create every combination of length n or can be used to generate a specific sequence. the "--format" flag can be enabled to switch to .sdf. Examples:  
 
 #create all combinations of 3-mer peptoids (20^3 = 8,000 molecules)
-python pepgen.py --smiles_file genscript_SMILES.txt --output_dir pepgen_output --mode combinations --length 3
+
+`python pepgen.py --smiles_file genscript_SMILES.txt --output_dir pepgen_output --mode combinations --length 3`
 
 #create a distinct 10-mer peptoid
-python pepgen.py --smiles_file genscript_SMILES.txt --output_dir pepgen_output --mode single --sequence "Ndip_NVal_NVal_Nmba_NIle_NLeu_Nffa_Ntbu_Nffa_Nffa"
+`python pepgen.py --smiles_file genscript_SMILES.txt --output_dir pepgen_output --mode single --sequence "Ndip_NVal_NVal_Nmba_NIle_NLeu_Nffa_Ntbu_Nffa_Nffa"`
 
 ***KEEP IN MIND THAT IF ALL 20 RESIDUES ARE USED, THE PEPTOID LIBRARY WILL SCALE AS 20^n!!! So a 5-mer library will be = 3.2 million peptoids***
