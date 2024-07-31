@@ -4,7 +4,7 @@ from pathlib import Path
 import argparse
 import stk
 from rdkit import Chem
-from rdkit.Chem import AllChem, Descriptors, rdMolDescriptors
+from rdkit.Chem import AllChem
 from openbabel import openbabel
 
 def read_smiles_file(smiles_file):
@@ -49,36 +49,15 @@ def optimize_molecule(molecule):
     """Optimize the molecule using RDKit."""
     Chem.SanitizeMol(molecule)  # Ensure valences are calculated
     rdkit_mol = Chem.AddHs(molecule)
-    
     AllChem.EmbedMolecule(rdkit_mol, randomSeed=0xf00d)
     AllChem.MMFFOptimizeMolecule(rdkit_mol)
     rdkit_mol = Chem.RemoveHs(rdkit_mol)
     return rdkit_mol
 
-def set_protonation_and_charges(molecule, pH=7.0):
-    """Set the protonation state and partial charges for the molecule."""
-    # Add explicit hydrogens to the molecule
-    molecule = Chem.AddHs(molecule)
-    
-    # Protonate the molecule
-    for atom in molecule.GetAtoms():
-        if atom.GetAtomicNum() == 7:  # Nitrogen
-            atom.SetFormalCharge(0)
-        elif atom.GetAtomicNum() == 8:  # Oxygen
-            atom.SetFormalCharge(0)
-    
-    # Compute Gasteiger charges
-    Chem.rdPartialCharges.ComputeGasteigerCharges(molecule)
-    
-    return molecule
-
 def save_molecule_to_file(molecule, output_dir, filename, file_format="mol2"):
     """Convert and save molecule to specified file format."""
     # Optimize the molecule
     optimized_mol = optimize_molecule(molecule)
-    
-    # Set protonation and charges
-    optimized_mol = set_protonation_and_charges(optimized_mol)
     
     if file_format == "mol2":
         # Write the molecule to a temporary .mol file using RDKit
@@ -90,6 +69,13 @@ def save_molecule_to_file(molecule, output_dir, filename, file_format="mol2"):
         ob_conversion.SetInAndOutFormats("mol", "mol2")
         ob_mol = openbabel.OBMol()
         ob_conversion.ReadFile(ob_mol, temp_mol_file)
+        
+        # Set the force field to MMFF94 and optimize
+        ff = openbabel.OBForceField.FindForceField("MMFF94")
+        ff.Setup(ob_mol)
+        ff.ConjugateGradients(250)  # Perform a force field optimization
+        ff.GetCoordinates(ob_mol)
+        
         mol2_file = os.path.join(output_dir, filename + '.mol2')
         ob_conversion.WriteFile(ob_mol, mol2_file)
         
@@ -116,6 +102,7 @@ def remove_first_bromine(molecule):
     bromine_idx = next((atom.GetIdx() for atom in rw_mol.GetAtoms() if atom.GetSymbol() == 'Br'), None)
     if bromine_idx is not None:
         rw_mol.RemoveAtom(bromine_idx)
+    Chem.SanitizeMol(rw_mol)  # Sanitize after modification
     return rw_mol
 
 def swap_terminal_hydroxyl_with_nitrogen(molecule):
@@ -136,6 +123,7 @@ def swap_terminal_hydroxyl_with_nitrogen(molecule):
         )
         if oxygen_idx is not None:
             rw_mol.ReplaceAtom(oxygen_idx, Chem.Atom('N'))
+    Chem.SanitizeMol(rw_mol)  # Sanitize after modification
     return rw_mol
 
 def main(args):
